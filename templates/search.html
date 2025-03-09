@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Search - {% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Search for Anime Merchandise</h2>
+    <form method="GET" action="/search" class="mb-5">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search for goods..." required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    {% if result %}
+        <p class="text-center">{{ result.meta.num_found }} results found.</p>
+        <div class="row">
+            {% for item in result.items %}
+                <div class="col-lg-3 col-md-4 col-sm-6 d-flex mb-4">
+                    <div class="card flex-fill">
+                        <img src="{{ item.thumbnails[0] }}" class="card-img" alt="{{ item.name }}" style="height:70%; object-fit:contain;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">{{ item.price }}</p>
+                            <a href="https://jp.mercari.com/item/{{ item.id_ }}" class="btn btn-primary mt-auto">View More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}
