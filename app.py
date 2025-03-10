@@ -1,6 +1,5 @@
 from quart import Quart, request, render_template
 from mercapi import Mercapi
-import amiami
 
 m = Mercapi()
 

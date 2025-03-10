@@ -26,3 +26,8 @@ body.dark-mode .btn-outline-light:hover {
     background-color: white;
     color: black;
 }
+
+.card-img {
+    object-fit:contain; 
+    height:56.5vh;
+}
