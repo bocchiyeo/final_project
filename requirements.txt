@@ -1,4 +1,4 @@
 quart
 mercapi
-requests
-bs4
+asyncio
+selenium

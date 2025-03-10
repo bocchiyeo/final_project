@@ -1,5 +1,7 @@
 from quart import Quart, request, render_template
 from mercapi import Mercapi
+from amiami_scraper import scrape_amiami
+import asyncio
 
 m = Mercapi()
 
@@ -13,8 +15,22 @@ async def index():
 async def search():
     s = request.args.get("q")
     if s:
-        result = await m.search(s)
-        return await render_template("search.html", result=result)
+        mercari = await m.search(s)
+        mresult = mercari.items
+        #rename the mercapi results to match amiami scraper result names
+        for item in mresult:
+            item_dict = item.__dict__
+            item_dict['productName'] = item_dict.pop('name', None)
+            item_dict['productPrice'] = item_dict.pop('price', None)
+            item_dict['productImg'] = item_dict.pop('thumbnails', [None])[0]
+            item_dict['productLink'] = "https://jp.mercari.com/item/" + item_dict.pop('id_', "")
+            item_dict['source'] = "Mercari"
+
+        aresult = await asyncio.to_thread(scrape_amiami, s, 1)
+        results = []
+        results.extend(aresult)
+        results.extend(mresult)
+        return await render_template("search.html", results=results, s=s)
     return await render_template("search.html")
 
 if __name__ == "__main__":
