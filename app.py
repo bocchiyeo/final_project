@@ -1,6 +1,6 @@
 from quart import Quart, request, render_template
 from mercapi import Mercapi
-from amiami_scraper import scrape_amiami
+from amiami_scraper import scrape_amiami, scrape_amiami_featured
 import asyncio
 
 m = Mercapi()
@@ -17,7 +17,7 @@ async def search():
     if s:
         mercari = await m.search(s)
         mresult = mercari.items
-        #rename the mercapi results to match amiami scraper result names
+        # rename the mercapi results to match amiami scraper result names
         for item in mresult:
             item_dict = item.__dict__
             item_dict['productName'] = item_dict.pop('name', None)
@@ -32,6 +32,12 @@ async def search():
         results.extend(mresult)
         return await render_template("search.html", results=results, s=s)
     return await render_template("search.html")
+
+@app.route('/figures')
+async def figures():
+    item = "Figures"
+    results = await asyncio.to_thread(scrape_amiami_featured, "bishoujo")
+    return await render_template("featured.html", results=results, item=item)
 
 if __name__ == "__main__":
     app.run(debug=True)

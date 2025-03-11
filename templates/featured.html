@@ -1,19 +1,11 @@
 {% extends "layout.html" %}
 
-{% block title %}Search - {% endblock %}
+{% block title %}{{ item }} - {% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h2 class="text-center mb-4">Search for Anime Merchandise</h2>
-    <form method="GET" action="/search" class="mb-5">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search for goods..." required value="{{ s }}">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </form>
-
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Newly Released Figures</h2>
     {% if results %}
-        <p class="text-center">Found {{ results | length }} results</p>
         <div class="row">
             {% for item in results %}
                 <div class="col-lg-3 col-md-4 col-sm-6 d-flex mb-4">
