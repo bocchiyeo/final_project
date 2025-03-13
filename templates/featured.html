@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="container my-5">
-        <h2 class="text-center mb-4">Newly Released Figures</h2>
+        <h2 class="text-center mb-4">Newly Released {{ item }}</h2>
     {% if results %}
         <div class="row">
             {% for item in results %}

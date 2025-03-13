@@ -39,5 +39,17 @@ async def figures():
     results = await asyncio.to_thread(scrape_amiami_featured, "bishoujo")
     return await render_template("featured.html", results=results, item=item)
 
+@app.route("/plushies")
+async def plushies():
+    item = "Plushies"
+    results = await asyncio.to_thread(scrape_amiami_featured, "plush")
+    return await render_template("featured.html", item=item, results=results)
+
+@app.route("/posters")
+async def posters():
+    item = "Posters"
+    results = await asyncio.to_thread(scrape_amiami, "posters", 3)
+    return await render_template("featured.html", item=item, results=results)
+
 if __name__ == "__main__":
     app.run(debug=True)
