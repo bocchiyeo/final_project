@@ -1,7 +1,7 @@
 from quart import Quart, request, render_template
 from mercapi import Mercapi
 from amiami_scraper import scrape_amiami, scrape_amiami_featured
-import asyncio
+from asyncio import to_thread
 
 m = Mercapi()
 
@@ -26,7 +26,7 @@ async def search():
             item_dict['productLink'] = "https://jp.mercari.com/item/" + item_dict.pop('id_', "")
             item_dict['source'] = "Mercari"
 
-        aresult = await asyncio.to_thread(scrape_amiami, s, 1)
+        aresult = await to_thread(scrape_amiami, s, 1)
         results = []
         results.extend(aresult)
         results.extend(mresult)
@@ -36,19 +36,19 @@ async def search():
 @app.route('/figures')
 async def figures():
     item = "Figures"
-    results = await asyncio.to_thread(scrape_amiami_featured, "bishoujo")
+    results = await to_thread(scrape_amiami_featured, "bishoujo")
     return await render_template("featured.html", results=results, item=item)
 
 @app.route("/plushies")
 async def plushies():
     item = "Plushies"
-    results = await asyncio.to_thread(scrape_amiami_featured, "plush")
+    results = await to_thread(scrape_amiami_featured, "plush")
     return await render_template("featured.html", item=item, results=results)
 
 @app.route("/posters")
 async def posters():
     item = "Posters"
-    results = await asyncio.to_thread(scrape_amiami, "posters", 3)
+    results = await to_thread(scrape_amiami, "posters", 2)
     return await render_template("featured.html", item=item, results=results)
 
 if __name__ == "__main__":

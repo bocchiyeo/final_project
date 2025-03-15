@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 chrome_options = Options()
 chrome_options.add_argument("--start-maximized")
@@ -38,11 +39,19 @@ def scrape_amiami(name, pages=1):
         for i in range(1, pages + 1): 
             driver.get(base_url + searchname + "&pagecnt=" + str(i))
 
-            # wait 20s for elements to load
-            products = WebDriverWait(driver, 20).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".newly-added-items__item.nomore"))
-            )
-
+            # wait 5s for elements to load
+            starttime = time.time()
+            # have to refresh page sometimes as there will be error
+            while True:
+                try:
+                    products = WebDriverWait(driver, 10).until(
+                        EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".newly-added-items__item.nomore"))
+                    )
+                    break
+                except Exception as e:
+                    if time.time() - starttime > 60:  # timeout after 60 seconds
+                        raise e
+                    driver.refresh()
             # scroll to load everything
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
@@ -53,7 +62,7 @@ def scrape_amiami(name, pages=1):
                     title_element = product.find_element(By.CLASS_NAME, "newly-added-items__item__name")
                     price_element = product.find_element(By.CLASS_NAME, "newly-added-items__item__price")
                     img_element = product.find_element(By.CSS_SELECTOR, ".newly-added-items__item__image_item img")
-                    link_element = product.find_element(By.XPATH, "//a[starts-with(@href, '/eng/detail/?gcode=')]")
+                    link_element = product.find_element(By.TAG_NAME, "a")
 
                     # extract details if all elements are present
                     title = title_element.text
