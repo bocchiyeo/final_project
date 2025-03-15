@@ -1,4 +1,4 @@
-# YOUR PROJECT TITLE
+# Anime Goods Finder
 #### Video Demo: https://www.youtube.com/watch?v=RbqKv1_Uqn4
 #### Description:
 The rationale behind me choosing this project, is that I usually shop online for anime merchandise, and find that I have to usually search many different sites not only to compare prices, but also to check availability and for items that are in the market. Therefore, I built a website combining searches from the 2 sites that I usually use, AmiAmi and MercariJP. 
